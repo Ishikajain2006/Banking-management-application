@@ -1,0 +1,135 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_ACCOUNTS 100
+
+// Global variables
+int accountCount = 0;
+int accountNumber[MAX_ACCOUNTS];
+char accountHolder[MAX_ACCOUNTS][50];
+float balance[MAX_ACCOUNTS];
+
+// Function declarations
+void createAccount();
+void depositMoney();
+void withdrawMoney();
+void checkBalance();
+void viewAllAccounts();
+
+int main() {
+    int choice;
+
+    do {
+        printf("\n==== Banking Management System ====\n");
+        printf("1. Create Account\n");
+        printf("2. Deposit Money\n");
+        printf("3. Withdraw Money\n");
+        printf("4. Check Balance\n");
+        printf("5. View All Accounts\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: createAccount(); break;
+            case 2: depositMoney(); break;
+            case 3: withdrawMoney(); break;
+            case 4: checkBalance(); break;
+            case 5: viewAllAccounts(); break;
+            case 6: printf("Thank you for using the system!\n"); break;
+            default: printf("Invalid choice! Try again.\n");
+        }
+    } while (choice != 6);
+
+    return 0;
+}
+
+// Function to create a new account
+void createAccount() {
+    if (accountCount >= MAX_ACCOUNTS) {
+        printf("Maximum account limit reached.\n");
+        return;
+    }
+
+    printf("Enter account number: ");
+    scanf("%d", &accountNumber[accountCount]);
+    printf("Enter account holder name: ");
+    scanf(" %[^\n]s", accountHolder[accountCount]);
+    balance[accountCount] = 0;
+
+    printf("Account created successfully!\n");
+    accountCount++;
+}
+
+// Function to deposit money
+void depositMoney() {
+    int accNo, i;
+    float amount;
+    printf("Enter account number: ");
+    scanf("%d", &accNo);
+
+    for (i = 0; i < accountCount; i++) {
+        if (accountNumber[i] == accNo) {
+            printf("Enter amount to deposit: ");
+            scanf("%f", &amount);
+            balance[i] += amount;
+            printf("Amount deposited successfully!\n");
+            return;
+        }
+    }
+    printf("Account not found.\n");
+}
+
+// Function to withdraw money
+void withdrawMoney() {
+    int accNo, i;
+    float amount;
+    printf("Enter account number: ");
+    scanf("%d", &accNo);
+
+    for (i = 0; i < accountCount; i++) {
+        if (accountNumber[i] == accNo) {
+            printf("Enter amount to withdraw: ");
+            scanf("%f", &amount);
+            if (amount > balance[i]) {
+                printf("Insufficient balance!\n");
+            } else {
+                balance[i] -= amount;
+                printf("Withdrawal successful!\n");
+            }
+            return;
+        }
+    }
+    printf("Account not found.\n");
+}
+
+// Function to check account balance
+void checkBalance() {
+    int accNo, i;
+    printf("Enter account number: ");
+    scanf("%d", &accNo);
+
+    for (i = 0; i < accountCount; i++) {
+        if (accountNumber[i] == accNo) {
+            printf("Account Holder: %s\n", accountHolder[i]);
+            printf("Current Balance: %.2f\n", balance[i]);
+            return;
+        }
+    }
+    printf("Account not found.\n");
+}
+
+// Function to view all accounts
+void viewAllAccounts() {
+    if (accountCount == 0) {
+        printf("No accounts available.\n");
+        return;
+    }
+
+    printf("\nAll Accounts:\n");
+    printf("--------------------------------------------------\n");
+    for (int i = 0; i < accountCount; i++) {
+        printf("Account No: %d | Name: %s | Balance: %.2f\n",
+               accountNumber[i], accountHolder[i], balance[i]);
+    }
+}
